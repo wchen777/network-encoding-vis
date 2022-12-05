@@ -15,6 +15,12 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 
+#include "visualizer.h"
+
+/*
+ * global visualizer settings struct
+ */
+visualizer_settings_t settings = {NRZ};
 
 #define MAX_PACKET 2048
 
@@ -58,6 +64,8 @@ void start_udp_listener(uint16_t udp_port) {
 
         // dump data into stdout
         fwrite(buffer, bytes_rec, 1, stdout);
+
+        // TODO: visualize here
     }
 
 }
@@ -68,8 +76,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Usage: %s <listener_port>\n", argv[0]);
         exit(1);
     }
-
-    fprintf(stderr, "Welcome to the network encoding visualizer. Here are a list of commands:\n");
+    fprintf(stderr, "Welcome to the network encoding visualizer. Here are a list of supported commands:\n");
 
     char* listener_port = argv[1];
     uint16_t udp_port = atoi(listener_port);
