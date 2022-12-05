@@ -16,13 +16,23 @@
 #include <fcntl.h>
 
 #include "visualizer.h"
+#define MAX_PACKET 2048
+
 
 /*
  * global visualizer settings struct
  */
-visualizer_settings_t settings = {NRZ};
+visualizer_settings_t settings = {NRZ_L};
 
-#define MAX_PACKET 2048
+
+
+/*
+ * run the visualizer. shows the physical wire on stdout
+ */
+int run_visualizer(char* data) {
+    // TODO: this.
+    return 0;
+}
 
 /*
  * start a udp listener listening for incoming packets on a given port.
