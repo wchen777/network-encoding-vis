@@ -12,4 +12,4 @@ visualizer: visualizer.o
 	$(CC) -c $< -o $@
 
 clean:
-	rm -rf
+	rm -rf visualizer
