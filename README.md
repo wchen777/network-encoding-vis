@@ -22,4 +22,8 @@ Default mode is `nrz_l`. More data on encoding techniques below.
 - `ping_random <num_bytes>` -> read `<num_bytes>` bytes from `/dev/random` and send it as a packet to the listener, outputting the visualization to `stdout`.
 - `ping_file <filepath>` -> read from the specified filepath and split up the file into packets to send to the visualizer.
 
+**Visualizer settings:**
+- `pace (0.0, 1.0]` -> set the signal visualizer speed
+
+
 ## Encoding techniques
