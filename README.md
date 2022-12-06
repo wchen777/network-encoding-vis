@@ -11,8 +11,8 @@ Usage: `./visualizer <udp_port_num>`
 **Changing encoding method:**
 - `nrz_l` -> change the visualization mode to NRZ (non-return to zero) level 
 - `nrz_i` -> change the visualization mode to NRZ (no-return to zero) inverted
-- `manchester_biphase` -> change the visualization mode to Bi-phase Manchester
-- `manchester_differential` -> change the visualization mode to Differential Manchester
+- `manchester_b` -> change the visualization mode to Bi-phase Manchester
+- `manchester_d` -> change the visualization mode to Differential Manchester
 - `block` -> change the visualization mode to 4B/5B block encoding
 
 Default mode is `nrz_l`. More data on encoding techniques below.

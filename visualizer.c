@@ -1,29 +1,13 @@
 #define _GNU_SOURCE
 
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <unistd.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <signal.h>
-#include <sys/wait.h>
-#include <fcntl.h>
-
 #include "visualizer.h"
 #define MAX_PACKET 2048
-
+#define BUFLEN 1024
 
 /*
  * global visualizer settings struct
  */
-visualizer_settings_t settings = {NRZ_L};
-
+visualizer_settings_t vis_settings = {NRZ_L, 1.0, PTHREAD_MUTEX_INITIALIZER};
 
 
 /*
@@ -34,9 +18,20 @@ int run_visualizer(char* data) {
     return 0;
 }
 
+
 /*
- * start a udp listener listening for incoming packets on a given port.
- * when a packet is received,
+ * close the udp port once the listener thread terminates
+ */
+void listener_cleanup(void *args) {
+    if (close(*((uint16_t *)args)) == -1) {
+        perror("close");
+    }
+    return NULL;
+}
+
+/*
+ * start a UDP listener listening for incoming packets on a given port.
+ * when a packet is received, run the run_visualizer function
  */
 void start_udp_listener(uint16_t udp_port) {
     // open up UDP port
@@ -65,6 +60,8 @@ void start_udp_listener(uint16_t udp_port) {
 
     fprintf(stderr, "Visualizer ready on port: %i\n", udp_port);
 
+    pthread_cleanup_push(listener_cleanup, (void *)&udp_sockfd);
+
     while(1) {
         char buffer[MAX_PACKET];
         ssize_t bytes_rec;
@@ -78,7 +75,49 @@ void start_udp_listener(uint16_t udp_port) {
         // TODO: visualize here
     }
 
+    pthread_cleanup_pop(1);
 }
+
+/*
+ * function passed into the thread that runs the visualizer UDP listener
+ */
+void *run_visualizer_listener_thread(void* args) {
+    uint16_t* port = (uint16_t *)args;
+    start_udp_listener(*port);
+    return NULL;
+}
+
+/*
+ * start listening for commands
+ */
+void start_repl() {
+
+    char server_command[BUFLEN];
+    while (fgets(server_command, BUFLEN, stdin)) {
+
+        // get the command name (the first word of the line)
+        char *command = strtok(server_command, " ");
+
+        // get the rest of the line
+        char *rest = strtok(NULL, " ");
+
+        // COMMANDS TO CHANGE ENCODING TYPE
+        if (!strcmp(command, "nrz_l")) {
+
+        } else if (!strcmp(command, "nrz_i")) {
+
+        } else if (!strcmp(command, "manchester_b")) {
+
+        } else if (!strcmp(command, "manchester_d")) {
+
+        } else if (!strcmp(command, "block")) {
+
+        }
+
+
+    }
+}
+
 
 int main(int argc, char **argv) {
 
@@ -88,11 +127,30 @@ int main(int argc, char **argv) {
     }
     fprintf(stderr, "Welcome to the network encoding visualizer. Here are a list of supported commands:\n");
 
+    int err;
+
     char* listener_port = argv[1];
     uint16_t udp_port = atoi(listener_port);
 
-    start_udp_listener(udp_port);
+    if ((err = pthread_create(&vis_settings.vis_thread, run_visualizer_listener_thread, (void *)&udp_port)) != 0) {
+        fprintf(stderr, "pthread create failed, err: %d\n", err);
+        exit(1);
+    }
 
-//    close(udp_port);
+    // accept commands for the listener
+    start_repl();
 
+    // cancel the listener thread once the visualizer repl is terminated
+    if ((err = pthread_cancel(vis_settings.vis_thread)) != 0) {
+        fprintf(stderr, "pthread cancel failed, err: %d\n", err);
+        exit(1);
+    }
+
+    // join with the listener thread
+    if ((err = pthread_join(vis_settings.vis_thread, NULL)) != 0) {
+        fprintf(stderr, "pthread join failed, err: %d\n", err);
+        exit(1);
+    }
+
+    pthread_exit(0);
 }
