@@ -17,7 +17,7 @@
 #include <fcntl.h>
 
 typedef enum encoding_type {
-    NRZ_L,
+    NRZ,
     NRZ_I,
     MANCHESTER_BIPHASE,
     MANCHESTER_DIFFERENTIAL,

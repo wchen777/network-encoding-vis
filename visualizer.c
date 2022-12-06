@@ -7,7 +7,7 @@
 /*
  * global visualizer settings struct
  */
-visualizer_settings_t vis_settings = {NRZ_L, 1.0, PTHREAD_MUTEX_INITIALIZER};
+visualizer_settings_t vis_settings = {NRZ, 1.0, PTHREAD_MUTEX_INITIALIZER};
 
 
 /*
@@ -102,7 +102,7 @@ void start_repl() {
         char *rest = strtok(NULL, " ");
 
         // COMMANDS TO CHANGE ENCODING TYPE
-        if (!strcmp(command, "nrz_l")) {
+        if (!strcmp(command, "nrz")) {
 
         } else if (!strcmp(command, "nrz_i")) {
 
