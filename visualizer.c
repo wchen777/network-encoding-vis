@@ -1,6 +1,6 @@
-#define _GNU_SOURCE
-
 #include "visualizer.h"
+#include "signal_encoding.h"
+
 #define MAX_PACKET 2048
 #define BUFLEN 1024
 
@@ -8,7 +8,7 @@
  * global visualizer settings struct
  */
 visualizer_settings_t vis_settings = {NRZ, 1.0, PTHREAD_MUTEX_INITIALIZER};
-
+ping_settings_t ping_config;
 
 /*
  * run the visualizer. shows the physical wire on stdout
@@ -69,10 +69,15 @@ void start_udp_listener(uint16_t udp_port) {
 
         bytes_rec = recvfrom(udp_sockfd, buffer, MAX_PACKET, 0, (struct sockaddr *) &cliaddr, &len);
 
+        // recvfrom errors
+        if (bytes_rec == -1) {
+            break;
+        }
+
+        fprintf(stderr, "received packet!\n");
         // dump data into stdout
         fwrite(buffer, bytes_rec, 1, stdout);
 
-        // TODO: visualize here
     }
 
     pthread_cleanup_pop(1);
@@ -112,8 +117,11 @@ void start_repl() {
 
         } else if (!strcmp(command, "block")) {
 
-        }
+        } else if (!strcmp(command, "test_clock")) {
 
+        } else if (!strcmp(command, "test_packet")) {
+            ping_self(&ping_config, server_command);
+        }
 
     }
 }
@@ -132,10 +140,13 @@ int main(int argc, char **argv) {
     char* listener_port = argv[1];
     uint16_t udp_port = atoi(listener_port);
 
-    if ((err = pthread_create(&vis_settings.vis_thread, run_visualizer_listener_thread, (void *)&udp_port)) != 0) {
+    if ((err = pthread_create(&vis_settings.vis_thread, NULL, run_visualizer_listener_thread, (void *)&udp_port)) != 0) {
         fprintf(stderr, "pthread create failed, err: %d\n", err);
         exit(1);
     }
+
+    // setup the sender udp port
+    setup_sender(&ping_config);
 
     // accept commands for the listener
     start_repl();

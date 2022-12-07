@@ -1,5 +1,3 @@
-#define _GNU_SOURCE
-
 #include <pthread.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -16,6 +14,8 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 
+#include "ping.h"
+
 typedef enum encoding_type {
     NRZ,
     NRZ_I,
@@ -25,8 +25,8 @@ typedef enum encoding_type {
 } encoding_type_t ;
 
 typedef struct visualizer_settings {
-    encoding_type_t encoding_type;
-    float pace;
-    pthread_mutex_t vis_mutex;
-    pthread_t vis_thread;
-} visualizer_settings_t ;
+    encoding_type_t encoding_type; // current type of visualization
+    float pace; // how fast the visualization should be
+    pthread_mutex_t vis_mutex; // mutex to protect settings fields
+    pthread_t vis_thread; // the thread that runs the visualizer
+} visualizer_settings_t;

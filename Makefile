@@ -5,7 +5,7 @@ CFLAGS = -g -Wall -lpthread -lutil
 
 all: visualizer
 
-visualizer: visualizer.o
+visualizer: visualizer.o signal_encoding.o
 	$(CC) $^ -o $@ $(CFLAGS)
 
 %.o: %.c
