@@ -1,15 +1,15 @@
 CC = gcc
-CFLAGS = -g -Wall -lpthread -lutil
+CFLAGS = -g -Wall -pthread -lutil
+
+SRCFILES = visualizer.c ping.c signal_encoding.c
+HEADERS = visualizer.h ping.h signal_encoding.h
 
 .PHONY: clean all
 
 all: visualizer
 
-visualizer: visualizer.o signal_encoding.o
-	$(CC) $^ -o $@ $(CFLAGS)
-
-%.o: %.c
-	$(CC) -c $< -o $@
+visualizer: $(SRCFILES) $(HEADERS)
+	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
 	rm -rf visualizer

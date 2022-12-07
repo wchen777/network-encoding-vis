@@ -26,7 +26,6 @@ void listener_cleanup(void *args) {
     if (close(*((uint16_t *)args)) == -1) {
         perror("close");
     }
-    return NULL;
 }
 
 /*
@@ -92,6 +91,18 @@ void *run_visualizer_listener_thread(void* args) {
     return NULL;
 }
 
+///*
+// * print a prompt for the repl
+// */
+//void print_prompt() {
+//    fprintf(stdout, "> ");
+//
+//    if (fflush(stdout) != 0) {
+//        perror("fflush");
+//        exit(0);
+//    }
+//}
+
 /*
  * start listening for commands
  */
@@ -100,11 +111,16 @@ void start_repl() {
     char server_command[BUFLEN];
     while (fgets(server_command, BUFLEN, stdin)) {
 
+        // continue if just newline
+        if (server_command[0] == '\n') {
+            continue;
+        }
+
         // get the command name (the first word of the line)
-        char *command = strtok(server_command, " ");
+        char *command = strtok(server_command, " \t\n");
 
         // get the rest of the line
-        char *rest = strtok(NULL, " ");
+//        char *rest = strtok(NULL, " ");
 
         // COMMANDS TO CHANGE ENCODING TYPE
         if (!strcmp(command, "nrz")) {
@@ -120,9 +136,9 @@ void start_repl() {
         } else if (!strcmp(command, "test_clock")) {
 
         } else if (!strcmp(command, "test_packet")) {
+            fprintf(stderr, "sending test packet!\n");
             ping_self(&ping_config, server_command);
         }
-
     }
 }
 
@@ -133,7 +149,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Usage: %s <listener_port>\n", argv[0]);
         exit(1);
     }
-    fprintf(stderr, "Welcome to the network encoding visualizer. Here are a list of supported commands:\n");
+    fprintf(stdout, "Welcome to the network encoding visualizer. Here are a list of supported commands:\n");
 
     int err;
 
@@ -146,6 +162,7 @@ int main(int argc, char **argv) {
     }
 
     // setup the sender udp port
+    ping_config.udp_port = udp_port;
     setup_sender(&ping_config);
 
     // accept commands for the listener

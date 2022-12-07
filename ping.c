@@ -8,7 +8,7 @@ void setup_sender(ping_settings_t *ping_config) {
 
     if (addr == NULL) {
         perror("malloc, setup udp conn");
-        return -1;
+        return;
     }
 
     memset(addr, 0, sizeof(*addr));
@@ -16,8 +16,8 @@ void setup_sender(ping_settings_t *ping_config) {
     int sockfd;
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd < 0) {
-        perror("ERROR opening socket");
-        return -1;
+        perror("socket");
+        return;
     }
 
     // set fd
@@ -36,7 +36,7 @@ void setup_sender(ping_settings_t *ping_config) {
  * send to our loopback listener
  */
 int ping_self(ping_settings_t *ping_config, char *data) {
-    sendto(ping_config->udp_sock, data, strlen(data), 0,
+    ssize_t bytes_sent = sendto(ping_config->udp_sock, data, strlen(data), 0,
            (const struct sockaddr *) ping_config->udp_addr,  sizeof(*ping_config->udp_addr));
-
+    return bytes_sent >=0 ? 0: -1;
 }
