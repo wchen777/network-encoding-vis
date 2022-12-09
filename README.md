@@ -33,3 +33,6 @@ Default mode is `nrz_l`. More data on encoding techniques below.
 - pace
 - make print smoother
 - print out the segment data and encoding protocol
+
+## Extra:
+- scale by terminal environment width

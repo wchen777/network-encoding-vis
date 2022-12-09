@@ -79,14 +79,14 @@ void print_signal(char* bit_line, char* top_line, char* mid_line, char* bottom_l
     // TODO: print out the packet data and encoding protocol
 
     // newlines for pretty print
-    // fprintf(stdout, "\n"); 
-    // fprintf(stdout, "\n"); 
-    // fprintf(stdout, "\n"); 
-    // fprintf(stdout, "\n"); 
-    // fprintf(stdout, "\n"); 
-    // fprintf(stdout, "\n");
-    // fprintf(stdout, "\n"); 
-    
+    fprintf(stdout, "\n"); 
+    fprintf(stdout, "\n"); 
+    fprintf(stdout, "\n"); 
+    fprintf(stdout, "\n"); 
+    fprintf(stdout, "\n"); 
+    fprintf(stdout, "\n");
+    fprintf(stdout, "\n"); 
+
     fprintf(stdout, "\t\t\t"); 
     fprintf(stdout, "%s\n", bit_line); 
     fprintf(stdout, "\t\t\t"); 
@@ -158,7 +158,7 @@ void visualize_nrz(short *bit_array, int len) {
         }
         // sleep so that the clear doesn't happen right away
         // TODO: pace 
-        usleep(800000); 
+        usleep(105000); 
 
         bit_buffer_offset++; // increment starting window index
         prev = NULL; // reset prev pointer to null for each window

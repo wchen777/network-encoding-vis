@@ -16,7 +16,7 @@ typedef struct bit_signal_pair {
 } bit_signal_pair_t;
 
 #define BIT_ARR_SIZE 1024 * CHAR_BIT
-#define WINDOW_SIZE 32
+#define WINDOW_SIZE 12
 #define MAX_SEG_CHARS 6
 #define MIN(a, b) ((a < b) ? a : b)
 
