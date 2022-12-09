@@ -19,10 +19,9 @@
 typedef enum encoding_type {
     NRZ,
     NRZ_I,
-    MANCHESTER_BIPHASE,
-    MANCHESTER_DIFFERENTIAL,
+    MANCHESTER,
     BLOCK_4B5B
-} encoding_type_t ;
+} encoding_type_t;
 
 typedef struct visualizer_settings {
     encoding_type_t encoding_type; // current type of visualization

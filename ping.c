@@ -36,7 +36,8 @@ void setup_sender(ping_settings_t *ping_config) {
  * send to our loopback listener
  */
 int ping_self(ping_settings_t *ping_config, char *data) {
-    ssize_t bytes_sent = sendto(ping_config->udp_sock, data, strlen(data), 0,
+    // cut off the packet length by MAX_PACKET
+    ssize_t bytes_sent = sendto(ping_config->udp_sock, data, MIN(strlen(data), MAX_PACKET), 0,
            (const struct sockaddr *) ping_config->udp_addr,  sizeof(*ping_config->udp_addr));
     return bytes_sent >=0 ? 0: -1;
 }

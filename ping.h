@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#define MAX_PACKET 1024
+#define MIN(a, b) ((a < b) ? a : b)
 
 // settings for sending to our own loopback listener
 typedef struct ping_settings {
@@ -16,3 +18,4 @@ typedef struct ping_settings {
 
 void setup_sender(ping_settings_t *ping_config);
 int ping_self(ping_settings_t *ping_config, char* data);
+

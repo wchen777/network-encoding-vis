@@ -1,7 +1,6 @@
 #include "visualizer.h"
 #include "signal_encoding.h"
 
-#define MAX_PACKET 2048
 #define BUFLEN 1024
 
 /*
@@ -13,9 +12,25 @@ ping_settings_t ping_config;
 /*
  * run the visualizer. shows the physical wire on stdout
  */
-int run_visualizer(char* data) {
-    // TODO: this.
-    return 0;
+void run_visualizer(char* data, int datalen) {
+    // vis_settings is set in the REPL when sending a packet of data to the listener 
+    short bit_array[BIT_ARR_SIZE]; 
+    decode_characters(data, bit_array); 
+
+    switch (vis_settings.encoding_type) {
+        case NRZ:
+            visualize_nrz(bit_array, datalen * CHAR_BIT); 
+            break;
+        case NRZ_I:
+            visualize_nrzi(bit_array, datalen * CHAR_BIT); 
+            break;
+        case MANCHESTER:
+            visualize_manchester(bit_array, datalen * CHAR_BIT); 
+            break;
+        case BLOCK_4B5B: 
+            visualize_block(bit_array, datalen * CHAR_BIT); 
+            break; 
+    }
 }
 
 
@@ -52,7 +67,7 @@ void start_udp_listener(uint16_t udp_port) {
 
     // Bind the socket with the server address
     if (bind(udp_sockfd, (const struct sockaddr *)&servaddr,
-             sizeof(servaddr)) < 0 )
+             sizeof(servaddr)) < 0)
     {
         perror("bind failed");
     }
@@ -73,10 +88,12 @@ void start_udp_listener(uint16_t udp_port) {
             break;
         }
 
-        fprintf(stderr, "received packet!\n");
-        // dump data into stdout
-        fwrite(buffer, bytes_rec, 1, stdout);
-
+        // fprintf(stderr, "received packet!\n");
+       
+        // null terminate the string 
+        buffer[bytes_rec] = '\0'; 
+        run_visualizer(buffer, bytes_rec); 
+        // fwrite(buffer, bytes_rec, 1, stdout);
     }
 
     pthread_cleanup_pop(1);
@@ -120,24 +137,25 @@ void start_repl() {
         char *command = strtok(server_command, " \t\n");
 
         // get the rest of the line
-//        char *rest = strtok(NULL, " ");
+        char *rest = strtok(NULL, " ");
 
         // COMMANDS TO CHANGE ENCODING TYPE
         if (!strcmp(command, "nrz")) {
-
+            vis_settings.encoding_type = NRZ;
         } else if (!strcmp(command, "nrz_i")) {
-
-        } else if (!strcmp(command, "manchester_b")) {
-
-        } else if (!strcmp(command, "manchester_d")) {
-
+            vis_settings.encoding_type = NRZ_I;
+        } else if (!strcmp(command, "manchester")) {
+            vis_settings.encoding_type = MANCHESTER;
         } else if (!strcmp(command, "block")) {
-
-        } else if (!strcmp(command, "test_clock")) {
-
-        } else if (!strcmp(command, "test_packet")) {
-            fprintf(stderr, "sending test packet!\n");
-            ping_self(&ping_config, server_command);
+            vis_settings.encoding_type = BLOCK_4B5B;
+        } 
+        
+        // PING COMMANDS
+        else if (!strcmp(command, "ping")) {
+            // fprintf(stderr, "sending test packet!\n");
+            if (ping_self(&ping_config, rest) == -1) {
+                fprintf(stderr, "ping failed.\n");
+            }
         }
     }
 }
