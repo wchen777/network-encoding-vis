@@ -164,7 +164,7 @@ void print_visualization(bit_signal_pair_t* signal_pair_array, int len, char* da
         }
 
         // sleep so that the clear doesn't happen right away
-        float pace_modifier = (1.0 - pace) * 400000;
+        float pace_modifier = (1.0 - pace) * 300000;
         usleep(40000 + (int)pace_modifier);
 
 //        usleep(80000 + ((1.0 - pace) * 500000));

@@ -136,18 +136,22 @@ void start_repl() {
         // get the command name (the first word of the line)
         char *command = strtok(server_command, " \t\n");
 
-        // get the rest of the line
+//        // get the rest of the line
         char *rest = strtok(NULL, " ");
 
         // COMMANDS TO CHANGE ENCODING TYPE
         if (!strcmp(command, "nrz")) {
             vis_settings.encoding_type = NRZ;
+            fprintf(stdout, "encoding protocol set to NRZ.\n");
         } else if (!strcmp(command, "nrz_i")) {
             vis_settings.encoding_type = NRZ_I;
+            fprintf(stdout, "encoding protocol set to NRZ-inverted.\n");
         } else if (!strcmp(command, "manchester")) {
             vis_settings.encoding_type = MANCHESTER;
+            fprintf(stdout, "encoding protocol set to Manchester.\n");
         } else if (!strcmp(command, "block")) {
             vis_settings.encoding_type = BLOCK_4B5B;
+            fprintf(stdout, "encoding protocol set to 4B/5B block encoding.\n");
         } 
         
         // PING COMMANDS
