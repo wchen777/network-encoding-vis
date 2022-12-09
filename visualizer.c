@@ -156,6 +156,8 @@ void start_repl() {
             if (ping_self(&ping_config, rest) == -1) {
                 fprintf(stderr, "ping failed.\n");
             }
+        } else {
+            fprintf(stderr, "command not supported.\n");
         }
     }
 }
