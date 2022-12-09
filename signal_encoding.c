@@ -80,7 +80,6 @@ void print_signal(char* bit_line, char* top_line, char* mid_line, char* bottom_l
     // TODO: print out the packet data and encoding protocol
 
     // newlines for pretty print
-<<<<<<< HEAD
     fprintf(stdout, "\n");
     fprintf(stdout, "\n");
     fprintf(stdout, "\n");
@@ -89,17 +88,7 @@ void print_signal(char* bit_line, char* top_line, char* mid_line, char* bottom_l
     fprintf(stdout, "Data Received: %s", data_raw);
     fprintf(stdout, "----------------------------\n");
     fprintf(stdout, "\n");
-    
-=======
-    fprintf(stdout, "\n"); 
-    fprintf(stdout, "\n"); 
-    fprintf(stdout, "\n"); 
-    fprintf(stdout, "\n"); 
-    fprintf(stdout, "\n"); 
-    fprintf(stdout, "\n");
-    fprintf(stdout, "\n"); 
 
->>>>>>> 40a38d6cd1174c7f640d41b136447a58f4bb8fd9
     fprintf(stdout, "\t\t\t"); 
     fprintf(stdout, "%s\n", bit_line); 
     fprintf(stdout, "\t\t\t"); 
@@ -175,12 +164,10 @@ void print_visualization(bit_signal_pair_t* signal_pair_array, int len, char* da
         }
 
         // sleep so that the clear doesn't happen right away
-<<<<<<< HEAD
-        usleep(80000 + ((1.0 - pace) * 800000));
-=======
-        // TODO: pace 
-        usleep(105000); 
->>>>>>> 40a38d6cd1174c7f640d41b136447a58f4bb8fd9
+        float pace_modifier = (1.0 - pace) * 400000;
+        usleep(40000 + (int)pace_modifier);
+
+//        usleep(80000 + ((1.0 - pace) * 500000));
 
         bit_buffer_offset++; // increment starting window index
         prev = NULL; // reset prev pointer to null for each window

@@ -156,7 +156,19 @@ void start_repl() {
             if (ping_self(&ping_config, rest) == -1) {
                 fprintf(stderr, "ping failed.\n");
             }
-        } else {
+        } else if (!strcmp(command, "pace")) {
+            float prev_pace = vis_settings.pace;
+            float next_pace = atof(rest);
+
+            if (next_pace > 0.0 && next_pace <= 1.0) {
+                fprintf(stdout, "pace set to %f, was %f.\n", next_pace, prev_pace);
+                vis_settings.pace = next_pace;
+            } else {
+                fprintf(stderr, "invalid pace value.\n");
+            }
+        }
+
+        else {
             fprintf(stderr, "command not supported.\n");
         }
     }
@@ -169,8 +181,13 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Usage: %s <listener_port>\n", argv[0]);
         exit(1);
     }
-    fprintf(stdout, "Welcome to the network encoding visualizer. Here are a list of supported commands:\n");
 
+    fprintf(stdout, "Welcome to the network encoding visualizer. Here are a list of supported commands:\n");
+    fprintf(stdout, "\n");
+    fprintf(stdout, "nrz -> change the visualization encoding to NRZ (non-return to zero).\n");
+    fprintf(stdout, "ping <data string> -> output `<data string>` as a signal visualization to stdout.\n");
+    fprintf(stdout, "pace (0.0, 1.0] -> set the signal visualizer speed.\n");
+    fprintf(stdout, "\n");
     int err;
 
     char* listener_port = argv[1];

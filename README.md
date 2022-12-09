@@ -9,7 +9,7 @@ Usage: `./visualizer <udp_port_num>`
 ### Supported commands:
 
 **Changing encoding method:**
-- `nrz_l` -> change the visualization mode to NRZ (non-return to zero) level 
+- `nrz` -> change the visualization mode to NRZ (non-return to zero)
 - `nrz_i` -> change the visualization mode to NRZ (no-return to zero) inverted
 - `manchester` -> change the visualization mode to Manchester
 - `block` -> change the visualization mode to 4B/5B block encoding
