@@ -6,7 +6,7 @@
 /*
  * global visualizer settings struct
  */
-visualizer_settings_t vis_settings = {NRZ, 1.0, PTHREAD_MUTEX_INITIALIZER};
+visualizer_settings_t vis_settings = {NRZ, 0.8, PTHREAD_MUTEX_INITIALIZER};
 ping_settings_t ping_config;
 
 /*
@@ -19,16 +19,16 @@ void run_visualizer(char* data, int datalen) {
 
     switch (vis_settings.encoding_type) {
         case NRZ:
-            visualize_nrz(bit_array, datalen * CHAR_BIT); 
+            visualize_nrz(bit_array, datalen * CHAR_BIT, data, vis_settings.pace);
             break;
         case NRZ_I:
-            visualize_nrzi(bit_array, datalen * CHAR_BIT); 
+            visualize_nrzi(bit_array, datalen * CHAR_BIT, data, vis_settings.pace);
             break;
         case MANCHESTER:
-            visualize_manchester(bit_array, datalen * CHAR_BIT); 
+            visualize_manchester(bit_array, datalen * CHAR_BIT, data, vis_settings.pace);
             break;
         case BLOCK_4B5B: 
-            visualize_block(bit_array, datalen * CHAR_BIT); 
+            visualize_block(bit_array, datalen * CHAR_BIT, data, vis_settings.pace);
             break; 
     }
 }
