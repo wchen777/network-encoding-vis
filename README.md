@@ -30,9 +30,8 @@ Default mode is `nrz_l`. More data on encoding techniques below.
 
 
 ## TODOS: 
-- pace
-- make print smoother
-- print out the segment data and encoding protocol
+- ping random
+- refactor print stuff into own .c file
 
 ## Extra:
 - scale by terminal environment width
