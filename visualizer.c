@@ -134,6 +134,9 @@ void start_repl() {
         }
 
         // get the command name (the first word of the line)
+        char saved[BUFLEN];
+        memset(saved, '\0', BUFLEN); 
+        strcpy(saved, server_command); 
         char *command = strtok(server_command, " \t\n");
 
 //        // get the rest of the line
@@ -157,8 +160,41 @@ void start_repl() {
         // PING COMMANDS
         else if (!strcmp(command, "ping")) {
             // fprintf(stderr, "sending test packet!\n");
-            if (ping_self(&ping_config, rest) == -1) {
+            if (!rest) {
+                fprintf(stderr, "Invalid number of arguments for ping: <ping> <string>\n"); 
+            }
+            char* fix_this = saved; 
+            fix_this += strlen("ping"); 
+            while (*fix_this == ' ') {
+                fix_this++;
+            }
+            if (ping_self(&ping_config, fix_this) == -1) {
                 fprintf(stderr, "ping failed.\n");
+            }
+        } else if (!strcmp(command, "ping_random")) {
+            if (!rest) {
+                fprintf(stderr, "Invalid number of arguments for ping_random: <ping_random> <num_bytes>\n"); 
+            }
+            int num_bytes = atoi(rest); 
+            
+            int fd = open("/dev/urandom", O_RDONLY); 
+            if (fd < 0) {
+                fprintf(stderr, "open failed.\n"); 
+                continue; 
+            }
+
+            // TODO: error checking? lol 
+            char buf[num_bytes];
+            memset(buf, '\0', num_bytes); 
+            int bytes_read = read(fd, buf, num_bytes); 
+            
+            if (bytes_read < 0) {
+                fprintf(stderr, "read failed.\n"); 
+                continue; 
+            }
+
+            if (ping_self(&ping_config, buf) == -1) {
+                fprintf(stderr, "ping failed.\n"); 
             }
         } else if (!strcmp(command, "pace")) {
             float prev_pace = vis_settings.pace;
@@ -170,9 +206,7 @@ void start_repl() {
             } else {
                 fprintf(stderr, "invalid pace value.\n");
             }
-        }
-
-        else {
+        } else {
             fprintf(stderr, "command not supported.\n");
         }
     }
