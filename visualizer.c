@@ -15,6 +15,7 @@ ping_settings_t ping_config;
 void run_visualizer(char* data, int datalen) {
     // vis_settings is set in the REPL when sending a packet of data to the listener 
     short bit_array[BIT_ARR_SIZE]; 
+    short bit_array_modified[BIT_ARR_SIZE_BLOCK]; 
     decode_characters(data, bit_array); 
 
     switch (vis_settings.encoding_type) {
@@ -28,7 +29,8 @@ void run_visualizer(char* data, int datalen) {
             visualize_manchester(bit_array, datalen * CHAR_BIT, data, vis_settings.pace);
             break;
         case BLOCK_4B5B: 
-            visualize_block(bit_array, datalen * CHAR_BIT, data, vis_settings.pace);
+            decode_block(bit_array, bit_array_modified, datalen * CHAR_BIT); 
+            visualize_block(bit_array_modified, (datalen * CHAR_BIT * 5)/4, data, vis_settings.pace);
             break; 
     }
 }
@@ -175,23 +177,15 @@ void start_repl() {
             if (!rest) {
                 fprintf(stderr, "Invalid number of arguments for ping_random: <ping_random> <num_bytes>\n"); 
             }
-            int num_bytes = atoi(rest); 
-            
-            int fd = open("/dev/urandom", O_RDONLY); 
-            if (fd < 0) {
-                fprintf(stderr, "open failed.\n"); 
-                continue; 
-            }
+            int num_bytes = atoi(rest) + 1; 
 
-            // TODO: error checking? lol 
-            char buf[num_bytes];
-            memset(buf, '\0', num_bytes); 
-            int bytes_read = read(fd, buf, num_bytes); 
-            
-            if (bytes_read < 0) {
-                fprintf(stderr, "read failed.\n"); 
-                continue; 
+            char buf[num_bytes+1];
+            memset(buf, '\0', num_bytes+1); 
+
+            for (int i = 0; i < num_bytes; i++) {
+                buf[i] = (rand() % 95) + 32; 
             }
+            buf[num_bytes-1] = '\n'; 
 
             if (ping_self(&ping_config, buf) == -1) {
                 fprintf(stderr, "ping failed.\n"); 
@@ -214,6 +208,7 @@ void start_repl() {
 
 
 int main(int argc, char **argv) {
+    srand(time(NULL)); 
 
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <listener_port>\n", argv[0]);
@@ -222,8 +217,17 @@ int main(int argc, char **argv) {
 
     fprintf(stdout, "Welcome to the network encoding visualizer. Here are a list of supported commands:\n");
     fprintf(stdout, "\n");
+    fprintf(stdout, "CHANGE ENCODING:\n");
+    fprintf(stdout, "---------------------\n");
     fprintf(stdout, "nrz -> change the visualization encoding to NRZ (non-return to zero).\n");
+    fprintf(stdout, "nrz_i -> change the visualization encoding to NRZ Inverted.\n");
+    fprintf(stdout, "manchester -> change the visualization encoding to Manchester.\n");
+    fprintf(stdout, "block -> change the visualization encoding to 4B/5B block.\n");
+    fprintf(stdout, "\n");
+    fprintf(stdout, "VISUALIZE DATA:\n");
+    fprintf(stdout, "---------------------\n");
     fprintf(stdout, "ping <data string> -> output `<data string>` as a signal visualization to stdout.\n");
+    fprintf(stdout, "ping_random <num_bytes> -> output <num_bytes> random characters as a signal visualization.\n");
     fprintf(stdout, "pace (0.0, 1.0] -> set the signal visualizer speed.\n");
     fprintf(stdout, "\n");
     int err;
