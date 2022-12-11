@@ -26,21 +26,21 @@ We had a window size that would dictate how many of the signal transition segmen
 We were able to reach our goal, though we chose to only implement one of the Manchester encoding type. Our results are displayed in a screen capture below for each of the different encoding types: 
 
 **NRZ**
-
 Displays 1 as high voltage, 0 as low voltage.
+![](recordings/nrz.mov)
 
 **NRZ Inverted**
-
 0 stays at the same voltage, 1 transitions to the opposite voltage.
+![](recordings/nrz_i.mov)
 
 **Manchester**
-
 0 is a low to high voltage transition, 1 is a high to low voltage transition.
+![](recordings/manchester.mov)
 
 **4B/5B Block Encoding**
-
 Same as NRZ Inverted, but each segment of 4 bits is converted into 5 bits according to the conversion table so as to break up continuous 0's.
-
+![](recordings/block.mov)
+![](recordings/random.mov)
 
 We've learned about the different encoding types and how each encoding type will impact the signal that is emitted from the wire, i.e. HI or LO depending on whether the bit was 1 or 0. 
 
