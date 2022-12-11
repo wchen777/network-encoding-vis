@@ -8,18 +8,17 @@ What did you build, and how does it work?
 The resulting binary, `visualizer`, takes in a port number and listens for UDP packets on that particular port. And then there is a REPL that offers options for changing the 
 - pace, which controls how fast the wire is moving across your screen. 
 - encoding type, the default being NRZ
-- sending a packet (using `ping <string>`). The LF is included in the string that is sent and is also visualized as a result.  
+- as well as sending a packet (using `ping <string>`). The LF is included in the string that is sent and is also visualized as a result.  
 
 When the system starts up: 
 - A listener thread is spawned that listens for incoming UDP packets
   - When a UDP packet is received, it visualizes the packet given the current settings (pace, encoding protocol)
   - Before the visualization step, the data is received and converted into a bit array according to the ASCII value of the character. For instance, the "!" character would result in [0, 0, 1, 0, 0, 0, 0, 1]. For 4B/5B block encoding, each of the four bits would get converted to the corresponding 5 bit number according to the conversion table. 
-- A REPL that lets the user input a command to change settings or send data to the visualizer
 
 For the visualizer, we took the array of bits and converted it to "signal transition segments", which contained two segments of either a LO or a HI segment to represent a change/no change in high or low voltage along the wire.
 For printing, we also had to ensure the spacing of the individual signal transitions lined up and were printed correctly. This means we had to accumulate each line separately, and then print them all at once to get the results we wanted. 
 
-We had a window size that would dictate how many of the signal transition segments we would print out at a time, and we would incrementally slide the window after each window was visualized. And between each window, we needed to clear out the terminal screen in order to create the animation, so we decided to use the `system` function call, passing in "clear" as the argument. And before clearing the terminal, we would sleep depending on how long the pace is. 
+We had a window size that would dictate how many of the signal transition segments we would print out at a time, and we would incrementally slide the window after each window was visualized. And between each window, we needed to clear out the terminal screen in order to create the animation, so we decided to use the `system` function call, passing in "clear" as the argument. And before clearing the terminal, sleep would be called with a value that depended on how long the pace is. 
 
 ## Discussion/Results: 
 
@@ -27,24 +26,24 @@ We were able to reach our goal, though we chose to only implement one of the Man
 
 **NRZ**
 Displays 1 as high voltage, 0 as low voltage.
-![](recordings/nrz.mov)
+![NRZ](recordings/nrz.gif)
 
 **NRZ Inverted**
 0 stays at the same voltage, 1 transitions to the opposite voltage.
-![](recordings/nrz_i.mov)
+![NRZ inverted](recordings/nrz_i.gif)
 
 **Manchester**
 0 is a low to high voltage transition, 1 is a high to low voltage transition.
-![](recordings/manchester.mov)
+![Manchester](recordings/manchester.gif)
 
 **4B/5B Block Encoding**
 Same as NRZ Inverted, but each segment of 4 bits is converted into 5 bits according to the conversion table so as to break up continuous 0's.
-![](recordings/block.mov)
-![](recordings/random.mov)
+![Block](recordings/block.gif)
+![Block with random](recordings/random.gif)
 
 We've learned about the different encoding types and how each encoding type will impact the signal that is emitted from the wire, i.e. HI or LO depending on whether the bit was 1 or 0. 
 
-The challenges we faced including finding the best way to visualize the data -- we ended up following a sliding window approach, to create a moving animation feel (similar to the `sl` command). 
+The challenges we faced including finding the best way to visualize the data -- we ended up following a sliding window approach, to create a moving animation feel (somewhat similar to the `sl` command). 
 
 ## Conclusions/Future work: 
 Overall, what have you learned? 
