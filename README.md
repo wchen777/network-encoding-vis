@@ -14,7 +14,7 @@ Usage: `./visualizer <udp_port_num>`
 - `manchester` -> change the visualization mode to Manchester
 - `block` -> change the visualization mode to 4B/5B block encoding
 
-Default mode is `nrz_l`. More data on encoding techniques below.
+Default mode is `nrz`. Default `pace` is `0.8`. More data on encoding techniques below.
 
 **Running the visualizer:**
 - `ping <data string>` -> send a packet containing `<data string>` to the listener, outputting the visualization to `stdout`.
