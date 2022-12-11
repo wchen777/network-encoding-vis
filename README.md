@@ -18,7 +18,7 @@ Default mode is `nrz_l`. More data on encoding techniques below.
 
 **Running the visualizer:**
 - `ping <data string>` -> send a packet containing `<data string>` to the listener, outputting the visualization to `stdout`.
-- `ping_random <num_bytes>` -> read `<num_bytes>` bytes from `/dev/random` and send it as a packet to the listener, outputting the visualization to `stdout`.
+- `ping_random <num_bytes>` -> send `<num_bytes>` random bytes as a packet to the listener, outputting the visualization to `stdout`.
 - `ping_file <filepath>` -> read from the specified filepath and split up the file into packets to send to the visualizer.
 
 **Visualizer settings:**
@@ -27,11 +27,21 @@ Default mode is `nrz_l`. More data on encoding techniques below.
 
 ## Encoding techniques
 
+**NRZ**
 
+Displays 1 as high voltage, 0 as low voltage.
 
-## TODOS: 
-- ping random
-- refactor print stuff into own .c file
+**NRZ Inverted**
+
+0 stays at the same voltage, 1 transitions to the opposite voltage.
+
+**Manchester**
+
+0 is a low to high voltage transition, 1 is a high to low voltage transition.
+
+**4B/5B Block Encoding**
+
+Same as NRZ Inverted, but each segment of 4 bits is converted into 5 bits according to the conversion table so as to break up continuous 0's.
 
 ## Extra:
 - scale by terminal environment width
