@@ -8,7 +8,7 @@ What did you build, and how does it work?
 The resulting binary, `visualizer`, takes in a port number and listens for UDP packets on that particular port. And then there is a REPL that offers options for changing the 
 - pace, which controls how fast the wire is moving across your screen. 
 - encoding type, the default being NRZ
-- sending a packet (using `ping <string>`)
+- sending a packet (using `ping <string>`). The LF is included in the string that is sent and is also visualized as a result.  
 
 When the system starts up: 
 - A listener thread is spawned that listens for incoming UDP packets
