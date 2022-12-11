@@ -31,17 +31,27 @@ Default mode is `nrz_l`. More data on encoding techniques below.
 
 Displays 1 as high voltage, 0 as low voltage.
 
+![NRZ](recordings/nrz.gif)
+
 **NRZ Inverted**
 
 0 stays at the same voltage, 1 transitions to the opposite voltage.
+
+![NRZ inverted](recordings/nrz_i.gif)
 
 **Manchester**
 
 0 is a low to high voltage transition, 1 is a high to low voltage transition.
 
+![Manchester](recordings/manchester.gif)
+
 **4B/5B Block Encoding**
 
 Same as NRZ Inverted, but each segment of 4 bits is converted into 5 bits according to the conversion table so as to break up continuous 0's.
+
+![Block](recordings/block.gif)
+
+![Block with random](recordings/random.gif)
 
 ## Extra:
 - scale by terminal environment width
