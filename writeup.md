@@ -1,4 +1,4 @@
-# Writeup 
+# Final Submission Writeup 
 
 ## Introduction 
 In this project, we wanted to create a simple visualizer for the different data encoding methods when data is sent over the physical wire, namely: NRZ, NRZ inverted, Manchester, and 4B/5B block encoding.
