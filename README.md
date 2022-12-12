@@ -19,7 +19,6 @@ Default mode is `nrz`. Default `pace` is `0.8`. More data on encoding techniques
 **Running the visualizer:**
 - `ping <data string>` -> send a packet containing `<data string>` to the listener, outputting the visualization to `stdout`.
 - `ping_random <num_bytes>` -> send `<num_bytes>` random bytes as a packet to the listener, outputting the visualization to `stdout`.
-- `ping_file <filepath>` -> read from the specified filepath and split up the file into packets to send to the visualizer.
 
 **Visualizer settings:**
 - `pace (0.0, 1.0]` -> set the signal visualizer speed
